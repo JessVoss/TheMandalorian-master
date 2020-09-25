@@ -5,6 +5,8 @@ using System.Windows;
 using System.Windows.Input;
 using MandalorianDB.BusinessLayer;
 using MandalorianDB.DataLayer;
+using System.Collections.Generic;
+
 
 namespace MandalorianDB.ViewModel
 {
@@ -33,21 +35,46 @@ namespace MandalorianDB.ViewModel
         private ObservableCollection<Episode> _episodes;
         private Episode _selectedEpisode;
         private Episode _episodeToAdd;
-        private Episode _searchWriter;
+       
         private string _episodeOperationFeedback;
-        private string _searchName;
+        
         private Episode _episodeToEdit;
+        private string _searchText;
+        private string _minEpisodeText;
+        private string _maxEpisodeText;
 
-
+        #endregion
+        
         #region Properties
 
-        public string SearchName
+        public string SearchText
         {
-            get { return _searchName; }
+            get { return _searchText; }
             set
             {
-                _searchName = value;
-                ;
+                _searchText = value;
+                OnPropertyChanged(nameof(SearchText));
+            }
+        }
+
+        public string MaxEpisodeText
+        {
+            get { return _maxEpisodeText; }
+            set
+            {
+                _maxEpisodeText = value;
+                OnPropertyChanged(nameof(MaxEpisodeText));
+            }
+        }
+
+
+        public string MinEpisodeText
+        {
+            get { return _minEpisodeText; }
+            set
+            {
+                _minEpisodeText = value;
+                OnPropertyChanged(nameof(MinEpisodeText));
             }
         }
         public string EpisodeOperationFeedback
@@ -95,14 +122,6 @@ namespace MandalorianDB.ViewModel
             }
 
         }
-
-        public Episode SearchWriter
-        {
-            get { return _searchWriter; }
-            set { _searchWriter = value; }
-          
-        }
-
         #endregion
 
         #region Method 
@@ -119,27 +138,32 @@ namespace MandalorianDB.ViewModel
             QuitApplicationCommand = new RelayCommand(new Action<object>(OnQuitApplication));
             DeleteEpisodeCommand = new RelayCommand(new Action<object>(OnDeleteEpisode));
         }
+         
         #endregion
+       
        
         private void Search(object parameter)
         {
+            //reset filter
+            MinEpisodeText = "";
+            MaxEpisodeText = "";
+
             Episodes = new ObservableCollection<Episode>(SessionData.GetEpisodeList());
-            SearchName = parameter.ToString().Replace("System.Windows.Controls.TextBox: ", "");
-            string writer = parameter.ToString();
-            if (writer != null)
-            {
-                for (int i = Episodes.Count - 1; i >= 0; i--)
-                {
-                    Episode episode = Episodes[i];
-                    if (episode.Writer != SearchName)
-                    {
-                        Episodes.RemoveAt(i);
-                    }
-                }
+
+            _episodes = new ObservableCollection<Episode>(_episodes.Where(x => x.Writer.ToLower().Contains(_searchText)));
+
             }
-            else
+           
+        private void OnEpisodeFilterEpisodeList()
+        {
+            //reset search
+            SearchText = "";
+            Episodes = new ObservableCollection<Episode>(SessionData.GetEpisodeList());
+            if(int.TryParse(MinEpisodeText, out int minEpisode) && int.TryParse(MaxEpisodeText,out int maxEpisode))
             {
-                MessageBox.Show("Please select a search criteria.");
+                
+
+                Episodes = new ObservableCollection<Episode>(Episodes.Where(x => x.EpisodeNumber >= minEpisode && x.EpisodeNumber <= maxEpisode));
             }
         }
         private void OnEditEpisode(object parameter)
@@ -160,7 +184,7 @@ namespace MandalorianDB.ViewModel
             }
             else if (commandParameter == "CANCEL")
             {
-                EpisodeToEdit = SelectedEpisode.Copy();
+               // EpisodeToEdit = SelectedEpisode.Copy();
                 EpisodeOperationFeedback = "Episode Update Canceled";
             }
             else
@@ -218,20 +242,18 @@ namespace MandalorianDB.ViewModel
         private void OnQuitApplication(object parameter)
         {
             //
-            // call a house keeping method in the business class
+            //  house keeping method 
             //
             System.Environment.Exit(1);
         }
         private void OnSortAsc(object parameter)
         {
-            Episodes = new ObservableCollection<Episode>(_episodes.OrderBy(x => x.EpisodeNumber));
+            Episodes = new ObservableCollection<Episode>(Episodes.OrderBy(x => x.EpisodeNumber));
         }
         private void OnSortDirector(object parameter)
         {
-            Episodes = new ObservableCollection<Episode>(_episodes.OrderBy(x => x.Director));
+            Episodes = new ObservableCollection<Episode>(Episodes.OrderBy(x => x.Director));
         }
-
-        #endregion
 
     }
 }

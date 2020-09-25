@@ -7,10 +7,10 @@
         xmlns:local1="clr-namespace:MandalorianDB.ViewModel"
         mc:Ignorable="d"
         Title="The Mandalorian" 
-        Height="600" Width="800"
+        Height="678" Width="896"
         Background="LightBlue"
         ResizeMode="NoResize"
-        WindowStyle="None"
+        
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style x:Key="HeaderStyle" TargetType="Label">
@@ -49,15 +49,16 @@
             <Setter Property="BorderThickness" Value="0"/>
         </Style>
         <Style x:Key="MasterLabelTextStyle" TargetType="Label">
-            <Setter Property="Foreground" Value="DarkBlue"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="FontSize" Value="12"/>
         </Style>
         <Style x:Key="ButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="DarkBlue"/>
-            <Setter Property="Foreground" Value="AntiqueWhite"/>
+            <Setter Property="Foreground" Value="White"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="Red"/>
+                    <Setter Property="Background" Value="White"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -84,9 +85,9 @@
 
             <Button
                   x:Name="Button_Quit"
-                  Width="75"
+                  Width="70"
                   Height="40"
-                  Margin="400,20,0,0"
+                  Margin="400,10,0,0"
                   HorizontalAlignment="Right"
                   VerticalAlignment="Top"           
                   FontSize="20"
@@ -97,55 +98,93 @@
         <Grid
             Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="191*"/>
-                <ColumnDefinition Width="75*"/>
-                <ColumnDefinition Width="150*"/>
+                <ColumnDefinition Width="209*"/>
+                <ColumnDefinition Width="200*"/>
             </Grid.ColumnDefinitions>
             <StackPanel
-                Grid.Column="0"
+                Grid.Column="1"
                 Orientation="Vertical"
-                Margin="20,10,10,20">
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Search By" Style="{StaticResource MasterLabelTextStyle}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Writer:" Style="{StaticResource MasterLabelTextStyle}"/>
-                    <TextBox  Style="{StaticResource DetailTextBoxStyle1}"/>
-                    <Button
-                       
-                  x:Name="Button_Search"
-                  Width="75"
-                  Height="40"
-                  HorizontalAlignment="Right"
-                  VerticalAlignment="Top"           
-                  FontSize="15"
-                  Content="Search"
-                  Style="{StaticResource ButtonStyle}"
-                  Command="{Binding Path= ButtonSearchCommand}" RenderTransformOrigin="0.5,-0.5"/>
-                </StackPanel>
+                Margin="20,20,0,20">
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0"
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel
+                          Grid.Row="0"
                         Margin="20,0,0,0"
-                        Orientation="Vertical">
-                        <Label Content="Sort By:" Style="{StaticResource MasterLabelTextStyle}"/>
+                        Orientation="Horizontal">
+                        <Label Content="Search Writer:" 
+                               Style="{StaticResource MasterLabelTextStyle}"/>
+                        <TextBox
+                            Name="TextBox_SearchCharacters"
+                            Width="130"
+                            Text="{Binding SearchText}"/>
+                        <Button 
+                            x:Name="Button_Search" 
+                            Width="40"
+                            Height="20"
+                            Margin="3"
+                            VerticalAlignment="Center"  
+                            FontSize="10"
+                            Content="Search"
+                            Style="{StaticResource ButtonStyle}"
+                            Command="{Binding Path=ButtonSearchCommand}"/>
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Row="1"
+                        Margin="20,0,0,0"
+                        Orientation="Horizontal">
+                        <Label Content="Min Episode:" Style="{StaticResource MasterLabelTextStyle}"/>
+                        <TextBox
+                            Name="TextBox_MinEp"
+                            Width="40"
+                            Text="{Binding MinEpisodeText}"/>
+                        <Label Content="Max Episode:" Style="{StaticResource MasterLabelTextStyle}"/>
+                        <TextBox
+                            Name="TextBox_Episode"
+                            Width="40"
+                            Text="{Binding MaxEpisodeText}"/>
+                        <Button 
+                            x:Name="Button_EpisodeNumber" 
+                            Width="40"
+                            Height="20"
+                            Margin="3"
+                            VerticalAlignment="Center"           
+                            FontSize="10"
+                            Content="Filter"
+                            Style="{StaticResource ButtonStyle}"
+                            Command="{Binding Path=EpisodeFilterListCommand}"/>
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Row="2"
+                        Margin="20,0,0,0"
+                        Orientation="Horizontal">
+                        <Label Content="Sort by:" Style="{StaticResource MasterLabelTextStyle}"/>
                         <RadioButton 
-                            Name="RadioButton_EpisodeSort"
+                            Name="RadioButton_EpisodeAsc"
+                            Margin="20,5,0,0"
                             Content="Episode"
                             Style="{StaticResource RadioButtonStyle}"
-                            Command="{Binding RadioCommandSortAsc}"
+                            Command="{Binding Path=RadioCommandSortAsc}"
+                            CommandParameter="Episode"
                             IsChecked="True"/>
                         <RadioButton 
                             Name="RadioButton_DirectorSort"
+                            Margin="20,5,0,0"
                             Content="Director"
-                            Command="{Binding RadioCommandSortDirector}"
-                            Style="{StaticResource RadioButtonStyle}"/>
+                            Style="{StaticResource RadioButtonStyle}"
+                            Command="{Binding Path=RadioCommandSortDirector}"
+                            CommandParameter="Director"/>
+
                     </StackPanel>
                 </Grid>
-                <Grid Height="300">
+                <Grid Height="350" HorizontalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="93*"/>
+                        <ColumnDefinition Width="47*"/>
+                    </Grid.ColumnDefinitions>
                     <ListBox
                         x:Name="_master"
                         Grid.Column="0"
@@ -155,57 +194,62 @@
                         SelectedItem="{Binding SelectedEpisode, Mode=TwoWay}"
                         IsSynchronizedWithCurrentItem="True"
                         ScrollViewer.VerticalScrollBarVisibility="Visible">
-
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-
-                                <StackPanel
+                                <StackPanel 
+                                    Orientation="Vertical">
+                                    <StackPanel
                                 Orientation="Horizontal">
-                                    <Label
+                                        <Label
                                         Content="{Binding EpisodeNumber}"
                                         Width="30"                                
                                         Style="{StaticResource MasterLabelTextStyle}"/>
 
-                                    <Label
+                                        <Label
                                          Content="{Binding Name}"
                                          Padding="0,6"
                                         Style="{StaticResource MasterLabelTextStyle}"/>
-                                    
+
+                                    </StackPanel>
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </Grid>
-                <StackPanel Grid.Row="2"
+
+                <StackPanel Grid.Column="1"
+                    Orientation="Vertical"/>
+                <StackPanel
+                     Grid.Row="2" Grid.Column="2"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center">
                     <Button 
                         x:Name="Button_Save" 
-                        Width="75"
+                        Width="70"
                         Height="40"
                         Margin="10,10,10,10"
                         VerticalAlignment="Center"           
                         FontSize="20"
                         Content="Save"
                         Style="{StaticResource ButtonStyle}"
-                        Command="{Binding DeleteEpisodeCommand}"
+                        Command="{Binding Command}"
                         CommandParameter="Save"/>
                     <Button 
                         x:Name="Button_Cancel" 
-                        Width="75"
+                        Width="70"
                         Height="40"
                         Margin="10,10,10,10"
                         VerticalAlignment="Center"           
                         FontSize="20"
                         Content="Cancel"
                         Style="{StaticResource ButtonStyle}"
-                        Command="{Binding DeleteEpisodeCommand}"
+                        Command="{Binding Command}"
                         CommandParameter="CANCEL"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel
-                Grid.Column="1"
-                Orientation="Vertical" Grid.ColumnSpan="2">
+                Grid.Column="0"
+                Orientation="Vertical">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width=" *"/>
@@ -232,21 +276,22 @@
                             <TextBox Text="{Binding SelectedEpisode.Director}" Style="{StaticResource DetailTextBoxStyle}"/>
                         </StackPanel>
                         <StackPanel>
-                           <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal">
                                 <Label Content="Characters:" Style="{StaticResource DetailLabelStyle}"/>
                                 <ListBox Margin="30,10,59,10" ItemsSource="{Binding SelectedEpisode.Characters}" 
                                          MaxHeight="75"
                                          MinHeight="25" 
-                                         Width="170"/>
+                                         Width="152"/>
 
                             </StackPanel>
                         </StackPanel>
+
                         <StackPanel Orientation="Vertical">
                             <Label Content="Discription:" Style="{StaticResource DetailLabelStyle}"/>
                             <TextBox
                                 HorizontalAlignment="Left"
-                                Width="270"
-                                Height="190"
+                                Width="252"
+                                Height="200"
                                 TextWrapping="Wrap"
                                 VerticalAlignment="Top"
                                 
@@ -257,13 +302,15 @@
                         </StackPanel>
                     </StackPanel>
                 </Grid>
+
                 <StackPanel 
                     Grid.Row="2"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right">
+
                     <Button 
                         x:Name="Button_Add" 
-                        Width="75"
+                        Width="70"
                         Height="40"
                         Margin="10,10,10,10"
                         VerticalAlignment="Center"           
@@ -273,7 +320,7 @@
                         Command="{Binding Path=AddEpisodeCommand}"/>
                     <Button 
                         x:Name="Button_Edit" 
-                        Width="75"
+                        Width="70"
                         Height="40"
                         Margin="10,10,10,10"
                         VerticalAlignment="Center"           
@@ -283,7 +330,7 @@
                         Command="{Binding Path=EditEpisodeCommand}"/>
                     <Button 
                         x:Name="Button_Delete" 
-                        Width="75"
+                        Width="70"
                         Height="40"
                         Margin="10,10,10,10"
                         VerticalAlignment="Center"           
@@ -291,9 +338,9 @@
                         Content="Delete"
                         Style="{StaticResource ButtonStyle}"
                         Command="{Binding Path=DeleteEpisodeCommand}"/>
-                    
                 </StackPanel>
             </StackPanel>
         </Grid>
     </Grid>
+
 </Window>
