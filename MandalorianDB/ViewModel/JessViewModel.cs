@@ -148,21 +148,21 @@ namespace MandalorianDB.ViewModel
             MinEpisodeText = "";
             MaxEpisodeText = "";
 
-            Episodes = new ObservableCollection<Episode>(SessionData.GetEpisodeList());
+           Episodes = new ObservableCollection<Episode>(SessionData.GetEpisodeList());
 
-            _episodes = new ObservableCollection<Episode>(_episodes.Where(x => x.Writer.ToLower().Contains(_searchText)));
+            Episodes = new ObservableCollection<Episode>(Episodes.Where(x => x.Writer.ToLower().Contains(_searchText)));
 
             }
            
-        private void OnEpisodeFilterEpisodeList()
+        private void OnEpisodeFilterEpisodeList(object parameter)
         {
             //reset search
             SearchText = "";
             Episodes = new ObservableCollection<Episode>(SessionData.GetEpisodeList());
-            if(int.TryParse(MinEpisodeText, out int minEpisode) && int.TryParse(MaxEpisodeText,out int maxEpisode))
-            {
-                
 
+            if(int.TryParse(MinEpisodeText, out int minEpisode) && int.TryParse(MaxEpisodeText, out int maxEpisode))
+            {
+              
                 Episodes = new ObservableCollection<Episode>(Episodes.Where(x => x.EpisodeNumber >= minEpisode && x.EpisodeNumber <= maxEpisode));
             }
         }
